@@ -1,0 +1,15 @@
+-- AlterTable
+ALTER TABLE "Client" ADD COLUMN     "certificado" TEXT,
+ADD COLUMN     "comissao" BOOLEAN DEFAULT false,
+ADD COLUMN     "comissao_id" INTEGER,
+ADD COLUMN     "justificativa" TEXT,
+ADD COLUMN     "key_certificado" TEXT,
+ADD COLUMN     "sefaz" BOOLEAN DEFAULT false,
+ADD COLUMN     "serie" TEXT,
+ADD COLUMN     "simples" BOOLEAN NOT NULL DEFAULT true,
+ADD COLUMN     "tel_contador" TEXT,
+ADD COLUMN     "valor_comissao" DOUBLE PRECISION,
+ADD COLUMN     "whatsapp_cont" BOOLEAN NOT NULL DEFAULT false,
+ALTER COLUMN "situacao" DROP NOT NULL,
+ALTER COLUMN "situacao" DROP DEFAULT,
+ALTER COLUMN "situacao" SET DATA TYPE TEXT;

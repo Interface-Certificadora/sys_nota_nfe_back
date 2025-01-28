@@ -23,5 +23,10 @@ async function bootstrap() {
   console.log(`Application is running on: http://localhost:${port}`);
   console.log('.....');
   console.log('.....');
+  console.log('.....');
+  console.log(`Documentation is running on: http://localhost:${port}/doc`);
+  console.log('.....');
+  console.log('.....');
+  console.log('.....');
 }
 bootstrap();

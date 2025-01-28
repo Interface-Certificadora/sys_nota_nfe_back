@@ -13,60 +13,57 @@ model User {
   email     String   @unique
   password  String
   senha     String
+  status    Boolean   @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Client {
-  id                    Int       @id @default(autoincrement()) //id do cliente
-  cliente               String //nome do cliente
-  fantasia              String? //nome fantasia
-  cnpj                  String //cnpj
-  ie                    String //inscrição estadual
-  razaoSocial           String //razao social
-  telefone              String? //telefone 1
-  whatsapp              Boolean   @default(false) //tem whatsapp tel 1
-  telefone2             String? //telefone 2
-  whatsapp2             Boolean   @default(false) //tem whatsapp tel 2
-  email                 String? //email
-  user                  String //usuário do portal Nota NFe
-  password              String //senha do portal Nota NFe
-  logo                  String //logo para adicionar no portal Nota NFe formato base64 ou url
-  ultimanota            String? //ultimo numero da nota antes do sistema
-  serie                 String? //serie da ultima nota
-  vctoCd                DateTime? //data de vencimento do certificado digital
-  valor                 Float //valor do plano
-  plano                 String //tipo de plano
-  situacao              String? //situação do simples
-  simples               Boolean   @default(true) //tem simples
-  status                Boolean   @default(true) //status do cliente no sistema nota nfe
-  dominio               String //dominio do portal Nota NFe
-  contador              String //nome da contabilidade
-  tel_contador          String? //telefone da contabilidade
-  whatsapp_cont         Boolean   @default(false) //tem whatsapp da contabilidade
-  endereco              String? //endereço da empresa
-  bairro                String? //bairro da empresa
-  cidade                String? //cidade da empresa
-  uf                    String? //uf da empresa
-  cep                   String? //cep da empresa
-  complemento           String? //complemento do endereco da empresa
-  numero                String? //numero da empresa
-  fechamento            Int?      @default(10) //dia de fechamento do plano
-  teste                 Int?      @default(10) //dia de teste do plano
-  vctoPlano             DateTime? //data de vencimento total do plano
-  comissao              Boolean?  @default(false) //tem comissao 
-  sefaz                 Boolean?  @default(false) //tem sefaz
-  valor_comissao        Float? //valor da comissao
-  justificativa         String? //justificativa
-  certificado           String? //endereço do certificado
-  key_certificado       String? //senha do certificado
-  nome_comissionado     String? //nome do comissionado
-  telefone_comissionado String? //telefone do comissionado
-  whatsapp_comissionado Boolean?  @default(false) //tem whatsapp do comissionado
-  pix_comissionado      String? //pix do comissionado
-  email_comissionado    String? //email do comissionado
-  createdAt             DateTime  @default(now())
-  updatedAt             DateTime  @updatedAt
+  id              Int       @id @default(autoincrement()) //id do cliente
+  cliente         String //nome do cliente
+  fantasia        String? //nome fantasia
+  cnpj            String //cnpj
+  ie              String //inscrição estadual
+  razaoSocial     String //razao social
+  telefone        String? //telefone 1
+  whatsapp        Boolean   @default(false) //tem whatsapp tel 1
+  telefone2       String? //telefone 2
+  whatsapp2       Boolean   @default(false) //tem whatsapp tel 2
+  email           String? //email
+  user            String //usuário do portal Nota NFe
+  password        String //senha do portal Nota NFe
+  logo            String //logo para adicionar no portal Nota NFe formato base64 ou url
+  ultimanota      String? //ultimo numero da nota antes do sistema
+  serie           String? //serie da ultima nota
+  vctoCd          DateTime? //data de vencimento do certificado digital
+  valor           Float //valor do plano
+  plano           String //tipo de plano
+  situacao        String? //situação do simples
+  simples         Boolean   @default(true) //tem simples
+  status          Boolean   @default(true) //status do cliente no sistema nota nfe
+  dominio         String //dominio do portal Nota NFe
+  contador        String //nome da contabilidade
+  tel_contador    String? //telefone da contabilidade
+  whatsapp_cont   Boolean   @default(false) //tem whatsapp da contabilidade
+  endereco        String? //endereço da empresa
+  bairro          String? //bairro da empresa
+  cidade          String? //cidade da empresa
+  uf              String? //uf da empresa
+  cep             String? //cep da empresa
+  complemento     String? //complemento do endereco da empresa
+  numero          String? //numero da empresa
+  fechamento      Int?      @default(10) //dia de fechamento do plano
+  teste           Int?      @default(10) //dia de teste do plano
+  vctoPlano       DateTime? //data de vencimento total do plano
+  comissao        Boolean?  @default(false) //tem comissao 
+  sefaz           Boolean?  @default(false) //tem sefaz
+  valor_comissao  Float? //valor da comissao
+  justificativa   String? //justificativa
+  certificado     String? //endereço do certificado
+  key_certificado String? //senha do certificado
+  comissao_id     Int? //id do comissionado
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 }
 
 model Leads {
