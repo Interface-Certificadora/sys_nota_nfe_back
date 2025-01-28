@@ -1,0 +1,9 @@
+{
+  "apps": [
+    {
+      "name": "Sys_nota_nfe_back",
+      "script": "yarn start:dev",
+      "watch": true
+    }
+  ]
+}

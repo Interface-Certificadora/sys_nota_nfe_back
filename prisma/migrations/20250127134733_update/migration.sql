@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "Client" ALTER COLUMN "fechamento" DROP NOT NULL,
+ALTER COLUMN "teste" DROP NOT NULL,
+ALTER COLUMN "vctoPlano" DROP NOT NULL;
