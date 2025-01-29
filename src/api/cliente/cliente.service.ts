@@ -12,16 +12,24 @@ export class ClienteService {
   constructor(private readonly prismaService: PrismaService) {}
   async create(dados: CreateClienteDto): Promise<Cliente | ErroClienteEntity> {
     try {
-      console.log(dados);
-      const rest = await this.prismaService.client.create({
+      await this.prismaService.client.create({
         data: dados,
       });
+
+      const req = await this.prismaService.client.findFirst({
+        where: {
+          cnpj: dados.cnpj,
+          ie: dados.ie,
+          cliente: dados.cliente,
+          status: true,
+        },
+      });
       const data = {
-        ...rest,
-        cnpj: formatarCNPJ(rest.cnpj),
-        telefone: MascTel(rest.telefone),
-        telefone2: MascTel(rest.telefone2),
-        tel_contador: MascTel(rest.tel_contador),
+        ...req,
+        cnpj: formatarCNPJ(req.cnpj),
+        telefone: MascTel(req.telefone),
+        telefone2: MascTel(req.telefone2),
+        tel_contador: MascTel(req.tel_contador),
       };
       return data;
     } catch (error) {
