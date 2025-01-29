@@ -60,15 +60,15 @@ export class CreateClienteDto {
   @IsNotEmpty({ message: 'A Razão Social é obrigatório' })
   readonly razaoSocial: string;
 
-  @ApiPropertyOptional({
+  @ApiProperty({
     description: 'O telefone 1',
     example: '(00) 0000-0000',
     type: String,
   })
-  @IsOptional()
   @IsString({ message: 'O telefone é obrigatório' })
   @Transform(({ value }) => value.replace(/[^0-9]/g, ''))
   @Length(10, 11, { message: 'O telefone deve ter de 10 a 11 dígitos' })
+  @IsNotEmpty({ message: 'O telefone é obrigatório' })
   readonly telefone: string;
 
   @ApiPropertyOptional({
@@ -85,10 +85,10 @@ export class CreateClienteDto {
     example: '(00) 0000-0000',
     type: String,
   })
-  @IsOptional()
   @IsString({ message: 'O telefone2 é obrigatório' })
   @Transform(({ value }) => value.replace(/[^0-9]/g, ''))
   @Length(10, 11, { message: 'O telefone2 deve ter de 10 a 11 dígitos' })
+  @IsOptional()
   readonly telefone2: string;
 
   @ApiPropertyOptional({
@@ -211,22 +211,22 @@ export class CreateClienteDto {
   @IsBoolean({ message: 'O status deve ser true ou false' })
   readonly status: boolean;
 
-  @ApiPropertyOptional({
+  @ApiProperty({
     description: 'O domínio do portal NFe',
     example: 'www.portalnfe.com.br',
     type: String,
   })
-  @IsOptional()
   @IsString({ message: 'O domínio deve ser em formato texto' })
+  @IsNotEmpty({ message: 'O domínio é obrigatório' })
   readonly dominio: string;
 
-  @ApiPropertyOptional({
+  @ApiProperty({
     description: 'O nome da contabilidade',
     example: '123 Contabilidade',
     type: String,
   })
-  @IsOptional()
   @IsString({ message: 'O contador deve ser em formato texto' })
+  @IsNotEmpty({ message: 'O contador é obrigatório' })
   readonly contador: string;
 
   @ApiPropertyOptional({
@@ -375,12 +375,12 @@ export class CreateClienteDto {
   @IsString({ message: 'A key certificado deve ser em formato texto' })
   readonly key_certificado: string;
 
-  @ApiPropertyOptional({
+  @ApiProperty({
     description: 'Telefone Contador',
     example: '(00) 0000-0000',
     type: String,
   })
-  @IsOptional()
+  @IsNotEmpty({ message: 'O telefone do contador é obrigatório' })
   @IsString({ message: 'O telefone do contador deve ser em formato texto' })
   @Transform(({ value }) => value.replace(/\D/g, ''))
   @Length(10, 11, {
