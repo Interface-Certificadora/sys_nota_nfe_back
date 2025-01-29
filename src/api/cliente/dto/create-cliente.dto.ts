@@ -109,22 +109,22 @@ export class CreateClienteDto {
   @IsNotEmpty({ message: 'O email é obrigatório' })
   readonly email: string;
 
-  @ApiPropertyOptional({
+  @ApiProperty({
     description: 'O usuário  do portal NFe',
     example: 'joao',
     type: String,
   })
-  @IsOptional()
-  @IsString()
+  @IsNotEmpty({ message: 'O usuário do portal NFe é obrigatório' })
+  @IsString({ message: 'O usuário do portal NFe deve ser em formato texto' })
   readonly user: string;
 
-  @ApiPropertyOptional({
+  @ApiProperty({
     description: 'A senha do portal NFe',
     example: '123456',
     type: String,
   })
-  @IsOptional()
-  @IsString()
+  @IsNotEmpty({ message: 'A senha do portal NFe é obrigatório' })
+  @IsString({ message: 'A senha do portal NFe deve ser em formato texto' })
   readonly password: string;
 
   @ApiPropertyOptional({

@@ -32,7 +32,7 @@ model Client {
   email           String? //email
   user            String //usuário do portal Nota NFe
   password        String //senha do portal Nota NFe
-  logo            String //logo para adicionar no portal Nota NFe formato base64 ou url
+  logo            String? //logo para adicionar no portal Nota NFe formato base64 ou url
   ultimanota      String? //ultimo numero da nota antes do sistema
   serie           String? //serie da ultima nota
   vctoCd          DateTime? //data de vencimento do certificado digital
