@@ -29,8 +29,10 @@ export class ClienteController {
     description: 'não foi possível salvar o cliente.',
     type: ErroClienteEntity,
   })
-  create(@Body() createClienteDto: CreateClienteDto) {
-    return this.clienteService.create(createClienteDto);
+  async create(@Body() createClienteDto: CreateClienteDto) {
+    const retorno = await this.clienteService.create(createClienteDto);
+    console.log('🚀 ~ ClienteController ~ create ~ retorno:', retorno);
+    return retorno;
   }
 
   @Get()
