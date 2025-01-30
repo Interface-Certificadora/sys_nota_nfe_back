@@ -60,7 +60,7 @@ export class CreateClienteDto {
   @IsNotEmpty({ message: 'A Razão Social é obrigatório' })
   readonly razaoSocial: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'O telefone 1',
     example: '(00) 0000-0000',
     type: String,
