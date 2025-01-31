@@ -21,4 +21,19 @@ export class UserControllerPublic {
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
+
+  @Post()
+  @ApiResponse({
+    status: 201,
+    description: 'Cadastra um novo usuário',
+    type: CreateUserDto,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request',
+    type: ErrorUserEntity,
+  })
+  newPassword(@Body() createUserDto: CreateUserDto) {
+    return this.userService.createNewPassword(createUserDto);
+  }
 }

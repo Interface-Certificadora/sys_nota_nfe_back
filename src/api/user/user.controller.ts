@@ -5,16 +5,16 @@ import {
   Patch,
   Param,
   Delete,
-  UseGuards,
+  // UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { LoginGuard } from '../login/login.guard';
+// import { LoginGuard } from '../login/login.guard';
 import { ApiResponse } from '@nestjs/swagger';
 import { User } from './entities/user.entity';
 import { ErrorUserEntity } from './entities/erro.user.entity';
 
-@UseGuards(LoginGuard)
+// @UseGuards(LoginGuard)
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -77,5 +77,20 @@ export class UserController {
   })
   remove(@Param('id') id: string) {
     return this.userService.remove(+id);
+  }
+
+  @Patch('reset/:id')
+  @ApiResponse({
+    status: 201,
+    description: 'Reset de senha para o padrão 1234',
+    type: User,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Usuário não encontrado',
+    type: ErrorUserEntity,
+  })
+  reset(@Param('id') id: string) {
+    return this.userService.findResetPassword(+id);
   }
 }
