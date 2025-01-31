@@ -5,16 +5,17 @@ import {
   Patch,
   Param,
   Delete,
-  // UseGuards,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
-// import { LoginGuard } from '../login/login.guard';
-import { ApiResponse } from '@nestjs/swagger';
+import { LoginGuard } from '../login/login.guard';
+import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { User } from './entities/user.entity';
 import { ErrorUserEntity } from './entities/erro.user.entity';
 
-// @UseGuards(LoginGuard)
+@UseGuards(LoginGuard)
+@ApiBearerAuth()
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}

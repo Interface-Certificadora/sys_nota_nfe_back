@@ -1,8 +1,21 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { ParceiroService } from './parceiro.service';
 import { CreateParceiroDto } from './dto/create-parceiro.dto';
 import { UpdateParceiroDto } from './dto/update-parceiro.dto';
+import { LoginGuard } from '../login/login.guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@UseGuards(LoginGuard)
+@ApiBearerAuth()
 @Controller('parceiro')
 export class ParceiroController {
   constructor(private readonly parceiroService: ParceiroService) {}
@@ -23,7 +36,10 @@ export class ParceiroController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateParceiroDto: UpdateParceiroDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateParceiroDto: UpdateParceiroDto,
+  ) {
     return this.parceiroService.update(+id, updateParceiroDto);
   }
 

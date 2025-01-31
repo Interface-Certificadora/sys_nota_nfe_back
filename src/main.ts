@@ -12,6 +12,7 @@ async function bootstrap() {
     .setTitle('Api Nota NFe')
     .setDescription('documentação para rotas da api')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('doc', app, documentFactory);

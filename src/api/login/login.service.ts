@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { UserLogin } from './dto/user.login.dto';
 import { ErrorLoginEntity } from './entities/Error.login.entity';
 import { Login } from './entities/login.entity';
@@ -20,7 +20,7 @@ export class LoginService {
         const retorno: ErrorLoginEntity = {
           message: 'Usuário e senha incorretos',
         };
-        throw retorno;
+        throw new HttpException(retorno, 400);
       }
 
       const isValid = bcrypt.compareSync(dados.password, UsuarioExist.password);
@@ -29,14 +29,14 @@ export class LoginService {
         const retorno: ErrorLoginEntity = {
           message: 'Usuário e senha incorretos',
         };
-        throw retorno;
+        throw new HttpException(retorno, 400);
       }
 
       if (!UsuarioExist.status) {
         const retorno: ErrorLoginEntity = {
           message: 'Usuário e senha incorretos',
         };
-        throw retorno;
+        throw new HttpException(retorno, 400);
       }
 
       const Pyload = {
@@ -58,7 +58,7 @@ export class LoginService {
       const retorno: ErrorLoginEntity = {
         message: error.message,
       };
-      throw retorno;
+      throw new HttpException(retorno, 400);
     }
   }
 
