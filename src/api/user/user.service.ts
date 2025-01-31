@@ -5,6 +5,7 @@ import { ErrorUserEntity } from './entities/erro.user.entity';
 import { User } from './entities/user.entity';
 import { PrismaService } from '../../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
+import { ResetPassUserDto } from './dto/reset-pass-user.dto';
 
 @Injectable()
 export class UserService {
@@ -202,21 +203,36 @@ export class UserService {
     }
   }
 
-  async createNewPassword(dados: any): Promise<User | ErrorUserEntity> {
+  async createNewPassword(
+    dados: ResetPassUserDto,
+  ): Promise<User | ErrorUserEntity> {
     try {
-      if (dados.senha !== dados.confirm) {
+      if (dados.password !== dados.confirm) {
         const retorno: ErrorUserEntity = {
           message: 'A senha é diferente da confirmação',
         };
         throw new HttpException(retorno, 400);
       }
+      const teste = await this.prismaService.user.findFirst({
+        where: {
+          email: dados.email,
+        },
+      });
+
+      if (!teste) {
+        const retorno: ErrorUserEntity = {
+          message: 'Email nao cadastrado',
+        };
+        throw new HttpException(retorno, 400);
+      }
+
       const req = await this.prismaService.user.update({
         where: {
-          id: dados.id,
+          email: dados.email,
         },
         data: {
-          password: this.generateHash(dados.senha),
-          senha: dados.senha,
+          password: this.generateHash(dados.password),
+          senha: dados.password,
         },
       });
 

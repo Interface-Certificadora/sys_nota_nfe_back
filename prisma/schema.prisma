@@ -13,7 +13,7 @@ model User {
   email     String   @unique
   password  String
   senha     String
-  status    Boolean   @default(true)
+  status    Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -26,9 +26,9 @@ model Client {
   ie              String //inscrição estadual
   razaoSocial     String //razao social
   telefone        String? //telefone 1
-  whatsapp        Boolean?   @default(false) //tem whatsapp tel 1
+  whatsapp        Boolean?  @default(false) //tem whatsapp tel 1
   telefone2       String? //telefone 2
-  whatsapp2       Boolean?   @default(false) //tem whatsapp tel 2
+  whatsapp2       Boolean?  @default(false) //tem whatsapp tel 2
   email           String? //email
   user            String //usuário do portal Nota NFe
   password        String //senha do portal Nota NFe
@@ -39,12 +39,12 @@ model Client {
   valor           Float //valor do plano
   plano           String //tipo de plano
   situacao        String? //situação do simples
-  simples         Boolean?   @default(true) //tem simples
-  status          Boolean?   @default(true) //status do cliente no sistema nota nfe
+  simples         Boolean?  @default(true) //tem simples
+  status          Boolean?  @default(true) //status do cliente no sistema nota nfe
   dominio         String //dominio do portal Nota NFe
   contador        String //nome da contabilidade
   tel_contador    String? //telefone da contabilidade
-  whatsapp_cont   Boolean?   @default(false) //tem whatsapp da contabilidade
+  whatsapp_cont   Boolean?  @default(false) //tem whatsapp da contabilidade
   endereco        String? //endereço da empresa
   bairro          String? //bairro da empresa
   cidade          String? //cidade da empresa
@@ -81,4 +81,17 @@ model Leads {
   email       String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model Parceiros {
+  id        Int      @id @default(autoincrement())
+  nome      String
+  cpf       String  @unique
+  chave_pix String?
+  telefone  String?
+  whatsapp  Boolean  @default(false)
+  email     String?
+  valor     Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

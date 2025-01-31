@@ -22,6 +22,7 @@ export class ClienteService {
 
   async create(dados: CreateClienteDto): Promise<Cliente | ErroClienteEntity> {
     try {
+      console.log('🚀 ~ ClienteService ~ create ~ dados:', dados);
       const save = await this.prismaService.client.create({
         data: dados,
       });
@@ -39,6 +40,7 @@ export class ClienteService {
       };
       return await Promise.resolve(data);
     } catch (error) {
+      console.log(error);
       const retorno: ErroClienteEntity = {
         message: error.message,
       };
@@ -48,18 +50,26 @@ export class ClienteService {
 
   async findAll(): Promise<Cliente[] | ErroClienteEntity> {
     try {
-      const req = await this.prismaService.client.findMany();
+      const req = await this.prismaService.client.findMany({
+        select: {
+          id: true,
+          razaoSocial: true,
+          cliente: true,
+          cnpj: true,
+          telefone: true,
+          status: true,
+        },
+      });
       const data = req.map((i: any) => {
         return {
           ...i,
           cnpj: formatarCNPJ(i.cnpj ?? ''),
           telefone: MascTel(i.telefone ?? ''),
-          telefone2: MascTel(i.telefone2 ?? ''),
-          tel_contador: MascTel(i.tel_contador ?? ''),
         };
       });
       return data;
     } catch (error) {
+      console.log(error);
       const retorno: ErroClienteEntity = {
         message: error.message,
       };

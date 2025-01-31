@@ -11,12 +11,13 @@ import {
 import { ClienteService } from './cliente.service';
 import { CreateClienteDto } from './dto/create-cliente.dto';
 import { UpdateClienteDto } from './dto/update-cliente.dto';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { Cliente } from './entities/cliente.entity';
 import { ErroClienteEntity } from './entities/error.cliente.entity';
 import { LoginGuard } from '../login/login.guard';
 
 @UseGuards(LoginGuard)
+@ApiBearerAuth()
 @Controller('cliente')
 export class ClienteController {
   constructor(private readonly clienteService: ClienteService) {}
@@ -34,7 +35,6 @@ export class ClienteController {
   })
   async create(@Body() createClienteDto: CreateClienteDto) {
     const retorno = await this.clienteService.create(createClienteDto);
-    console.log('🚀 ~ ClienteController ~ create ~ retorno:', retorno);
     return retorno;
   }
 

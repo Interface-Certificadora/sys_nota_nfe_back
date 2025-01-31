@@ -292,7 +292,7 @@ export class CreateClienteDto {
   })
   @IsOptional()
   @IsString({ message: 'O número deve ser em formato texto' })
-  @Transform(({ value }) => value.replace(/[^0-9]/g, ''))
+  // @Transform(({ value }) => value.replace(/[^0-9]/g, ''))
   readonly numero: string;
 
   @ApiPropertyOptional({
