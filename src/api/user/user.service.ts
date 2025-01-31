@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ErrorUserEntity } from './entities/erro.user.entity';
 import { User } from './entities/user.entity';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -21,7 +21,7 @@ export class UserService {
         const retorno: ErrorUserEntity = {
           message: 'Email ja cadastrado',
         };
-        throw retorno;
+        throw new HttpException(retorno, 400);
       }
 
       const req = await this.prismaService.user.create({
@@ -48,7 +48,7 @@ export class UserService {
       const retorno: ErrorUserEntity = {
         message: error.message,
       };
-      throw retorno;
+      throw new HttpException(retorno, 400);
     }
   }
 
@@ -70,7 +70,7 @@ export class UserService {
       const retorno: ErrorUserEntity = {
         message: error.message,
       };
-      throw retorno;
+      throw new HttpException(retorno, 400);
     }
   }
 
@@ -96,7 +96,7 @@ export class UserService {
       const retorno: ErrorUserEntity = {
         message: error.message,
       };
-      throw retorno;
+      throw new HttpException(retorno, 400);
     }
   }
 
@@ -110,7 +110,7 @@ export class UserService {
           id,
         },
         data: {
-          name: dados.name,
+          name: dados.name.toUpperCase(),
           email: dados.email,
           status: dados.status,
         },
@@ -136,7 +136,7 @@ export class UserService {
       const retorno: ErrorUserEntity = {
         message: error.message,
       };
-      throw retorno;
+      throw new HttpException(retorno, 400);
     }
   }
 
@@ -168,7 +168,73 @@ export class UserService {
       const retorno: ErrorUserEntity = {
         message: error.message,
       };
-      throw retorno;
+      throw new HttpException(retorno, 400);
+    }
+  }
+
+  async findResetPassword(id: number): Promise<User | ErrorUserEntity> {
+    try {
+      const req = await this.prismaService.user.update({
+        where: {
+          id,
+        },
+        data: {
+          password: this.generateHash('1234'),
+          senha: '1234',
+        },
+      });
+
+      const data: User = {
+        id: req.id,
+        name: req.name,
+        email: req.email,
+        status: req.status,
+        createdAt: req.createdAt,
+        updatedAt: req.updatedAt,
+      };
+
+      return data;
+    } catch (error) {
+      const retorno: ErrorUserEntity = {
+        message: error.message,
+      };
+      throw new HttpException(retorno, 400);
+    }
+  }
+
+  async createNewPassword(dados: any): Promise<User | ErrorUserEntity> {
+    try {
+      if (dados.senha !== dados.confirm) {
+        const retorno: ErrorUserEntity = {
+          message: 'A senha é diferente da confirmação',
+        };
+        throw new HttpException(retorno, 400);
+      }
+      const req = await this.prismaService.user.update({
+        where: {
+          id: dados.id,
+        },
+        data: {
+          password: this.generateHash(dados.senha),
+          senha: dados.senha,
+        },
+      });
+
+      const data: User = {
+        id: req.id,
+        name: req.name,
+        email: req.email,
+        status: req.status,
+        createdAt: req.createdAt,
+        updatedAt: req.updatedAt,
+      };
+
+      return data;
+    } catch (error) {
+      const retorno: ErrorUserEntity = {
+        message: error.message,
+      };
+      throw new HttpException(retorno, 400);
     }
   }
 
