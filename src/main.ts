@@ -17,6 +17,14 @@ async function bootstrap() {
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('doc', app, documentFactory);
 
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true, // Remove propriedades que não estão no DTO
+      forbidNonWhitelisted: true, // Lança erro se houver propriedades não definidas
+      transform: true, // Converte automaticamente os tipos
+    }),
+  );
+
   await app.listen(port);
   console.log('.....');
   console.log('.....');
