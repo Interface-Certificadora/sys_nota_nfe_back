@@ -20,8 +20,8 @@ export class UserControllerPublic {
     description: 'Bad Request',
     type: ErrorUserEntity,
   })
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+  async create(@Body() createUserDto: CreateUserDto) {
+    return await this.userService.create(createUserDto);
   }
 
   @Post('esqueci/senha')
@@ -35,7 +35,7 @@ export class UserControllerPublic {
     description: 'Bad Request',
     type: User,
   })
-  newPassword(@Body() dados: ResetPassUserDto) {
-    return this.userService.createNewPassword(dados);
+  async newPassword(@Body() dados: ResetPassUserDto) {
+    return await this.userService.createNewPassword(dados);
   }
 }
