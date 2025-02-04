@@ -98,13 +98,21 @@ model Parceiros {
 }
 
 model Cobranca {
-  id         Int      @id @default(autoincrement())
-  cliente_id Int
-  valor      Float
-  venc       String
-  current    String
-  status     Boolean  @default(false)
-  obs        String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id          Int      @id @default(autoincrement())
+  cliente_id  Int
+  valor       Float
+  venc        String
+  current     String
+  status      Boolean  @default(false)
+  obs         String
+  link_boleto String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Status_cliente{
+  id Int @id @default(autoincrement())
+  status String
+  id_cliente Int 
+  createdAt DateTime @default(now())
 }
