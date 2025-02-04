@@ -1,26 +1,133 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { CreateParceiroDto } from './dto/create-parceiro.dto';
 import { UpdateParceiroDto } from './dto/update-parceiro.dto';
+import { ErrorParceiroEntity } from './entities/error-parceiro.entity';
+import { Parceiro } from './entities/parceiro.entity';
+import { PrismaService } from '../../prisma/prisma.service';
+import { plainToClass } from 'class-transformer';
+import { ParceiroDeleteEntity } from './entities/parceiro.delete.entity';
 
 @Injectable()
 export class ParceiroService {
-  create(createParceiroDto: CreateParceiroDto) {
-    return 'This action adds a new parceiro';
+  constructor(private readonly prismaService: PrismaService) {}
+  async create(
+    data: CreateParceiroDto,
+  ): Promise<Parceiro | ErrorParceiroEntity> {
+    try {
+      const consulta = await this.prismaService.parceiros.findUnique({
+        where: {
+          cpf: data.cpf,
+        },
+      });
+
+      if (consulta) {
+        const retorno: ErrorParceiroEntity = {
+          message: 'Parceiro ja cadastrado',
+        };
+        throw new HttpException(retorno, 400);
+      }
+
+      const req = await this.prismaService.parceiros.create({
+        data,
+      });
+
+      return plainToClass(Parceiro, req);
+    } catch (error) {
+      const retorno: ErrorParceiroEntity = {
+        message: error.message,
+      };
+      throw new HttpException(retorno, 400);
+    }
   }
 
-  findAll() {
-    return `This action returns all parceiro`;
+  async findAll(): Promise<Parceiro[] | ErrorParceiroEntity> {
+    try {
+      const req = await this.prismaService.parceiros.findMany({
+        where: {
+          status: true,
+        },
+        select: {
+          id: true,
+          nome: true,
+          email: true,
+          telefone: true,
+          whatsapp: true,
+        },
+      });
+
+      return req.map((i: any) => plainToClass(Parceiro, i));
+    } catch (error) {
+      const retorno: ErrorParceiroEntity = {
+        message: error.message,
+      };
+      throw new HttpException(retorno, 400);
+    }
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} parceiro`;
+    try {
+      const req = this.prismaService.parceiros.findUnique({
+        where: {
+          id,
+        },
+      });
+
+      return plainToClass(Parceiro, req);
+    } catch (error) {
+      const retorno: ErrorParceiroEntity = {
+        message: error.message,
+      };
+      throw new HttpException(retorno, 400);
+    }
   }
 
-  update(id: number, updateParceiroDto: UpdateParceiroDto) {
-    return `This action updates a #${id} parceiro`;
+  async update(id: number, updateParceiroDto: UpdateParceiroDto) {
+    try {
+      const req = await this.prismaService.parceiros.update({
+        where: {
+          id,
+        },
+        data: updateParceiroDto,
+      });
+
+      return plainToClass(Parceiro, req);
+    } catch (error) {
+      const retorno: ErrorParceiroEntity = {
+        message: error.message,
+      };
+      throw new HttpException(retorno, 400);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} parceiro`;
+  async remove(
+    id: number,
+  ): Promise<ParceiroDeleteEntity | ErrorParceiroEntity> {
+    try {
+      const isdisbled = await this.prismaService.parceiros.findUnique({
+        where: {
+          id,
+        },
+      });
+
+      if (!isdisbled.status) {
+        return { message: 'Parceiro ja desativado' };
+      }
+
+      await this.prismaService.parceiros.update({
+        where: {
+          id,
+        },
+        data: {
+          status: false,
+        },
+      });
+
+      return { message: 'Parceiro desativado com sucesso' };
+    } catch (error) {
+      const retorno: ErrorParceiroEntity = {
+        message: error.message,
+      };
+      throw new HttpException(retorno, 400);
+    }
   }
 }

@@ -6,7 +6,7 @@ import {
   Patch,
   Param,
   Delete,
-  UseGuards,
+  // UseGuards,
 } from '@nestjs/common';
 import { ClienteService } from './cliente.service';
 import { CreateClienteDto } from './dto/create-cliente.dto';
@@ -14,9 +14,11 @@ import { UpdateClienteDto } from './dto/update-cliente.dto';
 import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { Cliente } from './entities/cliente.entity';
 import { ErroClienteEntity } from './entities/error.cliente.entity';
-import { LoginGuard } from '../login/login.guard';
+import { DeleteClienteDto } from './dto/delete-cliente.dto';
+import { ErrorEntity } from '../../entities/error-parceiro.entity';
+// import { LoginGuard } from '../login/login.guard';
 
-@UseGuards(LoginGuard)
+// @UseGuards(LoginGuard)
 @ApiBearerAuth()
 @Controller('cliente')
 export class ClienteController {
@@ -49,22 +51,60 @@ export class ClienteController {
     description: 'Não foi Possível encontrar os registros',
     type: ErroClienteEntity,
   })
-  findAll() {
+  findAll(): Promise<Cliente[] | ErroClienteEntity> {
     return this.clienteService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de clientes retornada com sucesso.',
+    type: Cliente,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Não foi Possível encontrar o registro',
+    type: ErroClienteEntity,
+  })
+  findOne(@Param('id') id: string): Promise<Cliente | ErroClienteEntity> {
     return this.clienteService.findOne(+id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateClienteDto: UpdateClienteDto) {
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de clientes retornada com sucesso.',
+    type: Cliente,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Não foi Possível encontrar o registro',
+    type: ErroClienteEntity,
+  })
+  update(
+    @Param('id') id: string,
+    @Body() updateClienteDto: UpdateClienteDto,
+  ): Promise<Cliente | ErroClienteEntity> {
     return this.clienteService.update(+id, updateClienteDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de clientes retornada com sucesso.',
+    type: DeleteClienteDto,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Não foi Possível encontrar o registro',
+    type: ErroClienteEntity,
+  })
+  /**
+   * Remove um cliente pelo ID.
+   * @param id O ID do cliente a ser removido.
+   * @returns Um objeto com o status e a mensagem de sucesso.
+   */
+  remove(@Param('id') id: string): Promise<DeleteClienteDto | ErrorEntity> {
     return this.clienteService.remove(+id);
   }
 }

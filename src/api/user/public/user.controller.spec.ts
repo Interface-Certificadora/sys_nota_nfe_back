@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserController } from './user.controller';
-import { UserService } from './user.service';
-import { PrismaModule } from '../../prisma/prisma.module';
+import { UserService } from '../user.service';
+import { PrismaModule } from '../../../prisma/prisma.module';
 import { JwtModule } from '@nestjs/jwt';
+import { UserControllerPublic } from './user.controller';
 
 describe('UserController', () => {
-  let controller: UserController;
+  let controller: UserControllerPublic;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -16,11 +16,11 @@ describe('UserController', () => {
           signOptions: { expiresIn: '1h' },
         }),
       ],
-      controllers: [UserController],
+      controllers: [UserControllerPublic],
       providers: [UserService],
     }).compile();
 
-    controller = module.get<UserController>(UserController);
+    controller = module.get<UserControllerPublic>(UserControllerPublic);
   });
 
   it('should be defined', () => {

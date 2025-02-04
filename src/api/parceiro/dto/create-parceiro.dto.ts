@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import {
   IsBoolean,
   IsNotEmpty,
@@ -26,6 +27,7 @@ export class CreateParceiroDto {
   })
   @IsString({ message: 'CPF tem que ser uma string' })
   @IsNotEmpty({ message: 'CPF nao pode ser vazio' })
+  @Transform(({ value }) => value.replace(/\D/g, ''))
   readonly cpf: string;
 
   @ApiProperty({
@@ -48,6 +50,7 @@ export class CreateParceiroDto {
   @IsOptional()
   @IsString({ message: 'Telefone tem que ser uma string' })
   @IsNotEmpty({ message: 'Telefone nao pode ser vazio' })
+  @Transform(({ value }) => value.replace(/\D/g, ''))
   readonly telefone: string;
 
   @ApiProperty({

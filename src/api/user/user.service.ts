@@ -6,12 +6,20 @@ import { User } from './entities/user.entity';
 import { PrismaService } from '../../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { ResetPassUserDto } from './dto/reset-pass-user.dto';
+import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class UserService {
   constructor(private readonly prismaService: PrismaService) {}
   async create(dados: CreateUserDto): Promise<User | ErrorUserEntity> {
     try {
+      if (!dados || !dados.email || !dados.password || !dados.name) {
+        const retorno: ErrorUserEntity = {
+          message: 'Dados de entrada inválidos',
+        };
+        throw new HttpException(retorno, 400);
+      }
+
       const UsuarioExist = await this.prismaService.user.findFirst({
         where: {
           email: dados.email,
@@ -20,53 +28,47 @@ export class UserService {
 
       if (UsuarioExist) {
         const retorno: ErrorUserEntity = {
-          message: 'Email ja cadastrado',
+          message: 'Email já cadastrado',
         };
         throw new HttpException(retorno, 400);
       }
 
-      const req = await this.prismaService.user.create({
-        data: {
-          name: dados.name.toUpperCase(),
-          email: dados.email,
-          password: this.generateHash(dados.password),
-          senha: dados.password,
-          status: true,
-        },
-      });
+      const hashedPassword = this.generateHash(dados.password);
 
-      const data: User = {
-        id: req.id,
-        name: req.name,
-        email: req.email,
-        status: req.status,
-        createdAt: req.createdAt,
-        updatedAt: req.updatedAt,
-      };
+      const req = await Promise.resolve(
+        await this.prismaService.user.create({
+          data: {
+            name: dados.name.toUpperCase(),
+            email: dados.email,
+            password: hashedPassword,
+            senha: dados.password,
+            status: true,
+          },
+        }),
+      );
 
-      return data;
+      if (!req) {
+        const retorno: ErrorUserEntity = {
+          message: 'Falha ao criar o usuário',
+        };
+        throw new HttpException(retorno, 500);
+      }
+
+      return plainToClass(User, req);
     } catch (error) {
+      console.log(error);
       const retorno: ErrorUserEntity = {
-        message: error.message,
+        message: error instanceof Error ? error.message : 'Erro desconhecido',
       };
-      throw new HttpException(retorno, 400);
+      throw new HttpException(retorno, 500);
     }
   }
 
   async findAll(): Promise<User[] | ErrorUserEntity> {
     try {
       const req = await this.prismaService.user.findMany();
-      const data: User[] = req.map((i: any) => {
-        return {
-          id: i.id,
-          name: i.name,
-          email: i.email,
-          status: i.status,
-          createdAt: i.createdAt,
-          updatedAt: i.updatedAt,
-        };
-      });
-      return data;
+
+      return req.map((i: any) => plainToClass(User, i));
     } catch (error) {
       const retorno: ErrorUserEntity = {
         message: error.message,
@@ -83,16 +85,7 @@ export class UserService {
         },
       });
 
-      const data: User = {
-        id: req.id,
-        name: req.name,
-        email: req.email,
-        status: req.status,
-        createdAt: req.createdAt,
-        updatedAt: req.updatedAt,
-      };
-
-      return data;
+      return plainToClass(User, req);
     } catch (error) {
       const retorno: ErrorUserEntity = {
         message: error.message,
@@ -123,16 +116,7 @@ export class UserService {
         },
       });
 
-      const data: User = {
-        id: req.id,
-        name: req.name,
-        email: req.email,
-        status: req.status,
-        createdAt: req.createdAt,
-        updatedAt: req.updatedAt,
-      };
-
-      return data;
+      return plainToClass(User, req);
     } catch (error) {
       const retorno: ErrorUserEntity = {
         message: error.message,
@@ -155,16 +139,7 @@ export class UserService {
         },
       });
 
-      const data: User = {
-        id: req.id,
-        name: req.name,
-        email: req.email,
-        status: req.status,
-        createdAt: req.createdAt,
-        updatedAt: req.updatedAt,
-      };
-
-      return data;
+      return plainToClass(User, req);
     } catch (error) {
       const retorno: ErrorUserEntity = {
         message: error.message,
@@ -185,16 +160,7 @@ export class UserService {
         },
       });
 
-      const data: User = {
-        id: req.id,
-        name: req.name,
-        email: req.email,
-        status: req.status,
-        createdAt: req.createdAt,
-        updatedAt: req.updatedAt,
-      };
-
-      return data;
+      return plainToClass(User, req);
     } catch (error) {
       const retorno: ErrorUserEntity = {
         message: error.message,
@@ -236,16 +202,7 @@ export class UserService {
         },
       });
 
-      const data: User = {
-        id: req.id,
-        name: req.name,
-        email: req.email,
-        status: req.status,
-        createdAt: req.createdAt,
-        updatedAt: req.updatedAt,
-      };
-
-      return data;
+      return plainToClass(User, req);
     } catch (error) {
       const retorno: ErrorUserEntity = {
         message: error.message,

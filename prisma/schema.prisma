@@ -86,12 +86,25 @@ model Leads {
 model Parceiros {
   id        Int      @id @default(autoincrement())
   nome      String
-  cpf       String  @unique
+  cpf       String   @unique
   chave_pix String?
   telefone  String?
   whatsapp  Boolean  @default(false)
   email     String?
   valor     Float
+  status    Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Cobranca {
+  id         Int      @id @default(autoincrement())
+  cliente_id Int
+  valor      Float
+  venc       String
+  current    String
+  status     Boolean  @default(false)
+  obs        String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
