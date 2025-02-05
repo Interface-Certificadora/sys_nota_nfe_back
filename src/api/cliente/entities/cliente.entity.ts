@@ -1,5 +1,6 @@
 import { ApiResponseProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
+import { Cobranca } from '../../cobranca/entities/cobranca.entity';
 
 export class Cliente {
   @ApiResponseProperty({ type: Number })
@@ -9,7 +10,7 @@ export class Cliente {
   cliente: string; //nome do cliente
 
   @ApiResponseProperty({ type: String })
-  fantasia: string; //nome fantasia
+  fantasia?: string; //nome fantasia
 
   @ApiResponseProperty({ type: String })
   @Transform(({ value }) => {
@@ -43,7 +44,7 @@ export class Cliente {
     }
     return tel;
   })
-  telefone: string; //telefone 1
+  telefone?: string; //telefone 1
 
   @ApiResponseProperty({ type: Boolean })
   whatsapp: boolean; //tem whatsapp tel 1
@@ -52,14 +53,13 @@ export class Cliente {
     type: String,
   })
   @Transform(({ value }) => {
-    const tel = value.replace(/\D/g, '');
+    const tel = value;
+    if (!tel) return null;
     if (tel.length === 11) {
       return tel.replace(/(\d{2})(\d{1})(\d{4})(\d{4})/, '($1) $2 $3-$4');
-    }
-    if (tel.length === 10) {
+    } else if (tel.length === 10) {
       return tel.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
-    }
-    return tel;
+    } else return tel;
   })
   telefone2: string; //telefone 2
 
@@ -175,13 +175,16 @@ export class Cliente {
   key_certificado: string; //senha do certificado
 
   @ApiResponseProperty({ type: Number })
-  readonly comissao_id: number; //id do comissionado
+  comissao_id: number; //id do comissionado
 
   @ApiResponseProperty({ type: Date })
   createdAt: Date;
 
   @ApiResponseProperty({ type: Date })
   updatedAt: Date;
+
+  @ApiResponseProperty({ type: () => [Cobranca] })
+  cobrancas?: Cobranca[]; // Relação com Cobrancas
 
   constructor(partial: Partial<Cliente>) {
     Object.assign(this, partial);

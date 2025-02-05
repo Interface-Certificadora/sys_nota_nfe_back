@@ -6,7 +6,7 @@ import { Cliente } from './entities/cliente.entity';
 import { PrismaService } from '../../prisma/prisma.service';
 import { plainToClass } from 'class-transformer';
 import { DeleteClienteDto } from './dto/delete-cliente.dto';
-import { ErrorEntity } from '../../entities/error-parceiro.entity';
+import { ErrorEntity } from '../../entities/error.entity';
 
 @Injectable()
 export class ClienteService {

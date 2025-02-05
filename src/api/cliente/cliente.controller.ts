@@ -6,7 +6,7 @@ import {
   Patch,
   Param,
   Delete,
-  // UseGuards,
+  UseGuards,
 } from '@nestjs/common';
 import { ClienteService } from './cliente.service';
 import { CreateClienteDto } from './dto/create-cliente.dto';
@@ -15,10 +15,10 @@ import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { Cliente } from './entities/cliente.entity';
 import { ErroClienteEntity } from './entities/error.cliente.entity';
 import { DeleteClienteDto } from './dto/delete-cliente.dto';
-import { ErrorEntity } from '../../entities/error-parceiro.entity';
-// import { LoginGuard } from '../login/login.guard';
+import { LoginGuard } from '../login/login.guard';
+import { ErrorEntity } from '../../entities/error.entity';
 
-// @UseGuards(LoginGuard)
+@UseGuards(LoginGuard)
 @ApiBearerAuth()
 @Controller('cliente')
 export class ClienteController {
