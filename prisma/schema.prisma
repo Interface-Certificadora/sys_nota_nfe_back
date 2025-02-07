@@ -22,13 +22,13 @@ model Client {
   id              Int        @id @default(autoincrement()) //id do cliente
   cliente         String //nome do cliente
   fantasia        String? //nome fantasia
-  cnpj            String //cnpj
+  cnpj            String     @unique //cnpj
   ie              String //inscrição estadual
   razaoSocial     String //razao social
   telefone        String? //telefone 1
-  whatsapp        Boolean   @default(false) //tem whatsapp tel 1
+  whatsapp        Boolean    @default(false) //tem whatsapp tel 1
   telefone2       String? //telefone 2
-  whatsapp2       Boolean   @default(false) //tem whatsapp tel 2
+  whatsapp2       Boolean    @default(false) //tem whatsapp tel 2
   email           String? //email
   user            String //usuário do portal Nota NFe
   password        String //senha do portal Nota NFe
@@ -44,7 +44,7 @@ model Client {
   dominio         String //dominio do portal Nota NFe
   contador        String //nome da contabilidade
   tel_contador    String? //telefone da contabilidade
-  whatsapp_cont   Boolean   @default(false) //tem whatsapp da contabilidade
+  whatsapp_cont   Boolean    @default(false) //tem whatsapp da contabilidade
   endereco        String? //endereço da empresa
   bairro          String? //bairro da empresa
   cidade          String? //cidade da empresa
@@ -101,7 +101,7 @@ model Parceiros {
 
 model Cobranca {
   id          Int      @id @default(autoincrement())
-  cliente_id  Int      
+  cliente_id  Int
   valor       Float
   venc        String
   current     String

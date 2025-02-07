@@ -6,7 +6,16 @@ import { plainToClass } from 'class-transformer';
 import { Cobranca } from './entities/cobranca.entity';
 import { PrismaService } from '../../prisma/prisma.service';
 import { DeleteCobranca } from './entities/erro.cobranca.entity';
+import * as csv from 'csv-parser';
+import * as fs from 'fs';
 
+type CsvRead = {
+  CNPJ: string;
+  Cliente: string;
+  Vencimento: string;
+  Valor: string;
+  LINK: string;
+};
 @Injectable()
 export class CobrancaService {
   constructor(private readonly prismaService: PrismaService) {}
@@ -154,6 +163,94 @@ export class CobrancaService {
     }
   }
 
+  async processCsv(file: Express.Multer.File) {
+    const path = file.path;
+
+    try {
+      const fileStream = fs.createReadStream(path);
+
+      await new Promise((resolve, reject) => {
+        fileStream
+          .pipe(csv({ separator: ',' })) // Configuração do parser
+          .on('data', async (record: CsvRead) => {
+            console.log(record);
+
+            const cliente = await this.IsExistClient(
+              record.CNPJ.replace(/\D/g, ''),
+            );
+
+            if (!cliente) {
+              console.log('não ja existe');
+            } else {
+              const currentValorBarra = record.Vencimento.split('/')[1];
+              const currentValorTraoco = record.Vencimento.split('-')[1];
+
+              const dados = {
+                cliente_id: cliente.id,
+                valor: parseFloat(
+                  record.Valor.replace('R$ ', '')
+                    .replace('.', '')
+                    .replace(',', '.'),
+                ),
+                ...(record.Vencimento !== cliente.cobrancas[0]?.venc && {
+                  venc: record.Vencimento.split('/').reverse().join('-'),
+                }),
+                current: !currentValorBarra
+                  ? currentValorTraoco
+                  : currentValorBarra,
+                status: record.LINK === 'pago' ? false : true,
+                ...(record.LINK === 'pago' && {
+                  obs: `${cliente.cliente} já efetuou o pagamento diretamente para Allsoft.`,
+                }),
+                ...(record.LINK !== 'pago' && { link_boleto: record.LINK }),
+              };
+
+              const id = cliente.cobrancas[0].id;
+
+              if (id) {
+                await this.prismaService.cobranca.update({
+                  where: {
+                    id,
+                  },
+                  data: {
+                    ...dados,
+                  },
+                });
+              }
+            }
+          }) // Captura os dados processados
+          .on('end', () => resolve('ok')) // Finaliza o processamento
+          .on('error', (error) => reject(error)); // Captura erros
+      });
+
+      // Destruir o arquivo csv de forma assíncrona
+      // await fs.promises.unlink(path);
+      return 'ok';
+    } catch (error) {
+      console.error('Erro ao processar CSV:', error); // Log opcional
+
+      // Garantir que o arquivo seja excluído mesmo em caso de erro
+      if (fs.existsSync(path)) {
+        await fs.promises.unlink(path);
+      }
+
+      throw new HttpException({ message: error.message }, 400);
+    }
+  }
+
+  async SaveCsv(data: any) {
+    try {
+      for (let index = 0; index < data.length; index++) {
+        const element = data[index];
+        console.log('🚀 ~ CobrancaService ~ SaveCsv ~ element:', element);
+      }
+
+      return 'ok';
+    } catch (error) {
+      throw new HttpException({ message: error.message }, 400);
+    }
+  }
+
   async remove(id: number): Promise<DeleteCobranca | ErrorEntity> {
     try {
       await this.prismaService.cobranca.delete({
@@ -170,6 +267,35 @@ export class CobrancaService {
         message: error.message,
       };
       throw new HttpException(retorno, 400);
+    }
+  }
+
+  //----------------------------------------------------------
+
+  async IsExistClient(cnpj: string) {
+    try {
+      const req = await this.prismaService.client.findUnique({
+        where: {
+          cnpj: cnpj.replace(/\D/g, ''),
+        },
+        include: {
+          cobrancas: {
+            where: {
+              status: true,
+            },
+            orderBy: {
+              venc: 'asc',
+            },
+          },
+        },
+      });
+
+      if (!req) {
+        return null;
+      }
+      return req;
+    } catch (error) {
+      return null;
     }
   }
 }

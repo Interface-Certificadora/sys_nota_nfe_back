@@ -9,7 +9,14 @@ import { ParceiroModule } from './api/parceiro/parceiro.module';
 import { CobrancaModule } from './api/cobranca/cobranca.module';
 
 @Module({
-  imports: [PrismaModule, LoginModule, UserModule, ClienteModule, ParceiroModule, CobrancaModule],
+  imports: [
+    PrismaModule,
+    LoginModule,
+    UserModule,
+    ClienteModule,
+    ParceiroModule,
+    CobrancaModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
