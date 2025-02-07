@@ -224,7 +224,7 @@ export class CobrancaService {
       });
 
       // Destruir o arquivo csv de forma assíncrona
-      // await fs.promises.unlink(path);
+      await fs.promises.unlink(path);
       return 'ok';
     } catch (error) {
       console.error('Erro ao processar CSV:', error); // Log opcional
