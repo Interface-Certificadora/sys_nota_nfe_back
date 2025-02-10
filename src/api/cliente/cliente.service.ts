@@ -6,7 +6,7 @@ import { Cliente } from './entities/cliente.entity';
 import { PrismaService } from '../../prisma/prisma.service';
 import { plainToClass } from 'class-transformer';
 import { DeleteClienteDto } from './dto/delete-cliente.dto';
-import { ErrorEntity } from '../../entities/error-parceiro.entity';
+import { ErrorEntity } from '../../entities/error.entity';
 
 @Injectable()
 export class ClienteService {
@@ -16,6 +16,10 @@ export class ClienteService {
     try {
       const save = await this.prismaService.client.create({
         data: dados,
+        include: {
+          parceiro: true,
+          cobrancas: true,
+        },
       });
 
       return plainToClass(Cliente, save);
@@ -38,6 +42,7 @@ export class ClienteService {
           cnpj: true,
           telefone: true,
           status: true,
+          parceiro: true,
         },
       });
       return req.map((i: any) => plainToClass(Cliente, i));
@@ -55,6 +60,10 @@ export class ClienteService {
       const req = await this.prismaService.client.findUnique({
         where: {
           id,
+        },
+        include: {
+          parceiro: true,
+          cobrancas: true,
         },
       });
       return plainToClass(Cliente, req);
@@ -85,6 +94,10 @@ export class ClienteService {
           id,
         },
         data: dados,
+        include: {
+          parceiro: true,
+          cobrancas: true,
+        },
       });
       return plainToClass(Cliente, save);
     } catch (error) {

@@ -55,7 +55,7 @@ export class CreateParceiroDto {
 
   @ApiProperty({
     description: 'Tem Whatsapp?',
-    example: 'whatsapp',
+    example: true,
     type: Boolean,
     required: false,
   })

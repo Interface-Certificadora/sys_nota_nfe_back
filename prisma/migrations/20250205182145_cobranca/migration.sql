@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Cobranca" ALTER COLUMN "obs" DROP NOT NULL,
+ALTER COLUMN "link_boleto" DROP NOT NULL;
