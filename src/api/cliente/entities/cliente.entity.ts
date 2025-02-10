@@ -1,6 +1,7 @@
 import { ApiResponseProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import { Cobranca } from '../../cobranca/entities/cobranca.entity';
+import { Parceiro } from '../../parceiro/entities/parceiro.entity';
 
 export class Cliente {
   @ApiResponseProperty({ type: Number })
@@ -185,6 +186,12 @@ export class Cliente {
 
   @ApiResponseProperty({ type: () => [Cobranca] })
   cobrancas?: Cobranca[]; // Relação com Cobrancas
+
+  @ApiResponseProperty({ type: Number })
+  parceiro_id?: number;
+
+  @ApiResponseProperty({ type: () => Parceiro })
+  parceiro?: Parceiro;
 
   constructor(partial: Partial<Cliente>) {
     Object.assign(this, partial);

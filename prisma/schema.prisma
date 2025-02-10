@@ -61,7 +61,8 @@ model Client {
   justificativa   String? //justificativa
   certificado     String? //endereço do certificado
   key_certificado String? //senha do certificado
-  comissao_id     Int? //id do comissionado
+  parceiro_id     Int? //id do comissionado
+  parceiro        Parceiros? @relation(fields: [parceiro_id], references: [id], onDelete: SetNull)
   createdAt       DateTime   @default(now())
   updatedAt       DateTime   @updatedAt
   //cada cliente vai ter varias cobranças
@@ -94,6 +95,7 @@ model Parceiros {
   whatsapp  Boolean  @default(false)
   email     String?
   valor     Float
+  clientes  Client[] 
   status    Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

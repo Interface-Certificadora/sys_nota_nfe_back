@@ -422,5 +422,5 @@ export class UpdateClienteDto {
   })
   @IsOptional()
   @IsNumber({}, { message: 'O id do comissionado deve ser um número' })
-  readonly comissao_id: number; //id do comissionado
+  readonly parceiro_id: number; //id do comissionado
 }
