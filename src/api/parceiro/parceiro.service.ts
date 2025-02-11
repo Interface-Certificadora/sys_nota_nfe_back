@@ -105,6 +105,9 @@ export class ParceiroService {
               cliente: true,
               status: true,
               cobrancas: {
+                where: {
+                  status: true,
+                },
                 select: {
                   id: true,
                   valor: true,
