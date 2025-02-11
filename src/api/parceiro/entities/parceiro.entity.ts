@@ -47,6 +47,12 @@ export class Parceiro {
   @ApiResponseProperty({ type: Date })
   readonly createdAt: Date;
 
+  @ApiResponseProperty({ type: Number })
+  readonly ativos: number;
+
+  @ApiResponseProperty({ type: Number })
+  readonly inativos: number;
+
   @ApiResponseProperty({ type: Date })
   readonly updatedAt: Date;
 

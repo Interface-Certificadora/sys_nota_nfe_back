@@ -52,10 +52,38 @@ export class ParceiroService {
           email: true,
           telefone: true,
           whatsapp: true,
+          clientes: {
+            select: {
+              id: true,
+              cliente: true,
+              status: true,
+            },
+          },
+          createdAt: true,
+          updatedAt: true,
         },
       });
 
-      return req.map((i: any) => plainToClass(Parceiro, i));
+      return req.map((i: any) => {
+        const data = {
+          id: i.id,
+          nome: i.nome,
+          email: i.email,
+          telefone: i.telefone,
+          whatsapp: i.whatsapp,
+          ...(i.clientes.length == 0
+            ? { ativos: 0, inativos: 0 }
+            : {
+                ativos: i.clientes.filter((i: any) => i.status == true).length,
+                inativos: i.clientes.filter((i: any) => i.status == false)
+                  .length,
+              }),
+          createdAt: i.createdAt,
+          updatedAt: i.updatedAt,
+        };
+
+        return plainToClass(Parceiro, data);
+      });
     } catch (error) {
       const retorno: ErrorParceiroEntity = {
         message: error.message,
@@ -69,6 +97,13 @@ export class ParceiroService {
       const req = this.prismaService.parceiros.findUnique({
         where: {
           id,
+        },
+        include: {
+          clientes: {
+            include: {
+              cobrancas: true,
+            },
+          },
         },
       });
 
@@ -88,6 +123,13 @@ export class ParceiroService {
           id,
         },
         data: updateParceiroDto,
+        include: {
+          clientes: {
+            include: {
+              cobrancas: true,
+            },
+          },
+        },
       });
 
       return plainToClass(Parceiro, req);
