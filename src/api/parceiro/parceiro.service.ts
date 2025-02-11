@@ -100,8 +100,21 @@ export class ParceiroService {
         },
         include: {
           clientes: {
-            include: {
-              cobrancas: true,
+            select: {
+              id: true,
+              cliente: true,
+              status: true,
+              cobrancas: {
+                select: {
+                  id: true,
+                  valor: true,
+                  venc: true,
+                  current: true,
+                  status: true,
+                  obs: true,
+                  link_boleto: true,
+                },
+              },
             },
           },
         },
