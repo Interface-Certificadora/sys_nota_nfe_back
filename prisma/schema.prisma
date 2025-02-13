@@ -55,9 +55,7 @@ model Client {
   fechamento      Int?       @default(10) //dia de fechamento do plano
   teste           Int?       @default(10) //dia de teste do plano
   vctoPlano       DateTime? //data de vencimento total do plano
-  comissao        Boolean?   @default(false) //tem comissao 
   sefaz           Boolean?   @default(false) //tem sefaz
-  valor_comissao  Float? //valor da comissao
   justificativa   String? //justificativa
   certificado     String? //endereço do certificado
   key_certificado String? //senha do certificado
@@ -87,18 +85,19 @@ model Leads {
 }
 
 model Parceiros {
-  id        Int      @id @default(autoincrement())
+  id        Int         @id @default(autoincrement())
   nome      String
-  cpf       String   @unique
+  cpf       String      @unique
   chave_pix String?
   telefone  String?
-  whatsapp  Boolean  @default(false)
+  whatsapp  Boolean     @default(false)
   email     String?
   valor     Float
-  clientes  Client[] 
-  status    Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  clientes  Client[]
+  status    Boolean     @default(true)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  Pagamento Pagamento[]
 }
 
 model Cobranca {
@@ -121,4 +120,17 @@ model Status_cliente {
   status     String
   id_cliente Int
   createdAt  DateTime @default(now())
+}
+
+model Pagamento {
+  id          Int      @id @default(autoincrement())
+  parceiro_id Int
+  valor       Float
+  venc        String
+  current     String
+  status      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  parceiro Parceiros @relation(fields: [parceiro_id], references: [id], onDelete: Cascade)
 }

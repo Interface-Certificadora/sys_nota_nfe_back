@@ -330,25 +330,6 @@ export class CreateClienteDto {
   readonly vctoPlano: Date;
 
   @ApiPropertyOptional({
-    description: 'Tem Comissão',
-    example: true,
-    type: Boolean,
-  })
-  @IsOptional()
-  @IsBoolean({ message: 'A comissão deve ser true ou false' })
-  readonly comissao: boolean;
-
-  @ApiPropertyOptional({
-    description: 'Valor da comissão',
-    example: 10,
-    type: Number,
-  })
-  @IsOptional()
-  @IsNumber({}, { message: 'A comissão deve ser um número' })
-  @Transform(({ value }) => parseFloat(parseFloat(value).toFixed(2)))
-  readonly valor_comissao: number;
-
-  @ApiPropertyOptional({
     description: 'Justificativa',
     example: 'Justificativa',
     type: String,
@@ -404,55 +385,5 @@ export class CreateClienteDto {
   })
   @IsOptional()
   @IsNumber({}, { message: 'O id do comissionado deve ser um número' })
-  readonly comissao_id: number; //id do comissionado
-
-  // @ApiPropertyOptional({
-  //   description: 'Nome do comissionado',
-  //   example: 'Nome',
-  //   type: String,
-  // })
-  // @IsOptional()
-  // @IsString({ message: 'O nome do comissionado deve ser em formato texto' })
-  // readonly nome_comissionado: string;
-
-  // @ApiPropertyOptional({
-  //   description: 'Telefone do comissionado',
-  //   example: '(00) 0000-0000',
-  //   type: String,
-  // })
-  // @IsOptional()
-  // @IsString({ message: 'O telefone do comissionado deve ser em formato texto' })
-  // @Transform(({ value }) => value.replace(/\D/g, ''))
-  // @Length(10, 11, {
-  //   message: 'O telefone do comissionado deve ter de 10 a 11 dígitos',
-  // })
-  // readonly telefone_comissionado: string; //telefone do comissionado
-
-  // @ApiPropertyOptional({
-  //   description: 'Whatsapp do comissionado',
-  //   example: true,
-  //   type: Boolean,
-  // })
-  // @IsOptional()
-  // @IsBoolean({ message: 'O whatsapp do comissionado deve ser true ou false' })
-  // readonly whatsapp_comissionado: boolean; //tem whatsapp do comissionado
-
-  // @ApiPropertyOptional({
-  //   description: 'Pix do comissionado',
-  //   example: '00000000-0',
-  //   type: String,
-  // })
-  // @IsOptional()
-  // @IsString({ message: 'O pix do comissionado deve ser em formato texto' })
-  // @Transform(({ value }) => value.replace(/\D/g, ''))
-  // readonly pix_comissionado: string; //pix do comissionado
-
-  // @ApiPropertyOptional({
-  //   description: 'Email do comissionado',
-  //   example: 'k0g0o@example.com',
-  //   type: String,
-  // })
-  // @IsOptional()
-  // @IsString({ message: 'O email do comissionado deve ser em formato texto' })
-  // readonly email_comissionado: string; //email do comissionado
+  readonly parceiro_id: number; //id do comissionado
 }
