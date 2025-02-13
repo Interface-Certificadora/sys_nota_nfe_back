@@ -92,6 +92,24 @@ export class ParceiroService {
     }
   }
 
+  async selectAllParceiro(): Promise<Parceiro[] | ErrorParceiroEntity> {
+    try {
+      const select = await this.prismaService.parceiros.findMany({
+        select: {
+          id: true,
+          nome: true,
+        },
+      });
+
+      return select.map((i: any) => plainToClass(Parceiro, i));
+    } catch (error) {
+      const retorno: ErrorParceiroEntity = {
+        message: error.message,
+      };
+      throw new HttpException(retorno, 400);
+    }
+  }
+
   findOne(id: number) {
     try {
       const req = this.prismaService.parceiros.findUnique({

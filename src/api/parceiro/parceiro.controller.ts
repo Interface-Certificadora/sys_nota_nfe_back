@@ -53,6 +53,18 @@ export class ParceiroController {
     return this.parceiroService.findOne(+id);
   }
 
+  @Get('select')
+  @ApiResponse({
+    status: 200,
+    type: Parceiro,
+    isArray: true,
+    description: 'Listar Parceiros',
+  })
+  @ApiResponse({ status: 400, type: ErrorParceiroEntity, description: 'Erro' })
+  selectAll() {
+    return this.parceiroService.selectAllParceiro();
+  }
+
   @Patch(':id')
   @ApiResponse({
     status: 201,
