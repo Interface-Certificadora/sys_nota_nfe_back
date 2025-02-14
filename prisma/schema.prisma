@@ -19,16 +19,16 @@ model User {
 }
 
 model Client {
-  id              Int        @id @default(autoincrement())
+  id              Int           @id @default(autoincrement())
   cliente         String
   fantasia        String?
-  cnpj            String     @unique
+  cnpj            String        @unique
   ie              String
   razaoSocial     String
   telefone        String?
-  whatsapp        Boolean    @default(false)
+  whatsapp        Boolean       @default(false)
   telefone2       String?
-  whatsapp2       Boolean    @default(false)
+  whatsapp2       Boolean       @default(false)
   email           String?
   user            String
   password        String
@@ -39,12 +39,12 @@ model Client {
   valor           Float
   plano           String
   situacao        String?
-  simples         Boolean?   @default(true)
-  status          Boolean?   @default(true)
+  simples         Boolean?      @default(true)
+  status          Boolean?      @default(true)
   dominio         String
   contador        String
   tel_contador    String?
-  whatsapp_cont   Boolean    @default(false)
+  whatsapp_cont   Boolean       @default(false)
   endereco        String?
   bairro          String?
   cidade          String?
@@ -52,18 +52,16 @@ model Client {
   cep             String?
   complemento     String?
   numero          String?
-  fechamento      Int?       @default(10)
-  teste           Int?       @default(10)
+  fechamento      Int?          @default(10)
+  teste           Int?          @default(10)
   vctoPlano       DateTime?
-  sefaz           Boolean?   @default(false)
+  sefaz           Boolean?      @default(false)
   justificativa   String?
   certificado     String?
   key_certificado String?
   parceiro_id     Int?
-  parceiro        Parceiros? @relation(fields: [parceiro_id], references: [id], onDelete: SetNull)
-
-  // Um cliente pode ter vários certificados
-  certificates certificate[]
+  parceiro        Parceiros?    @relation(fields: [parceiro_id], references: [id], onDelete: SetNull)
+  certificates    certificate[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -142,16 +140,23 @@ model Pagamento {
 }
 
 model certificate {
-  id        String   @id @default(uuid())
-  url       String?
-  urlExt    String?
-  password  String?
-  validade  String?
-  status    Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String   @id @default(uuid())
+  url          String?
+  password     String?
+  validade     String?
+  fieldname    String?
+  originalname String?
+  encoding     String?
+  mimetype     String?
+  destination  String?
+  filename     String?
+  path         String?
+  size         Int?
+  clientId     Int
+  status       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   // Um certificado pertence a um cliente
-  clientId Int
-  Client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  Client Client @relation(fields: [clientId], references: [id])
 }

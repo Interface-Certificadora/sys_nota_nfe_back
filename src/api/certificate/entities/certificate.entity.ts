@@ -12,6 +12,30 @@ export class Certificate {
   password: string;
 
   @ApiResponseProperty({ type: String })
+  fieldname: string;
+
+  @ApiResponseProperty({ type: String })
+  originalname: string;
+
+  @ApiResponseProperty({ type: String })
+  encoding: string;
+
+  @ApiResponseProperty({ type: String })
+  mimetype: string;
+
+  @ApiResponseProperty({ type: String })
+  destination: string;
+
+  @ApiResponseProperty({ type: String })
+  filename: string;
+
+  @ApiResponseProperty({ type: String })
+  path: string;
+
+  @ApiResponseProperty({ type: Number })
+  size: number;
+
+  @ApiResponseProperty({ type: String })
   validade?: string;
 
   @ApiResponseProperty({ type: Boolean })

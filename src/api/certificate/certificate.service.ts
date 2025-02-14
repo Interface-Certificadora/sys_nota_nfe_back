@@ -5,6 +5,9 @@ import { ErrorEntity } from 'src/entities/error.entity';
 import { Certificate } from './entities/certificate.entity';
 import { plainToClass } from 'class-transformer';
 import { PrismaService } from 'src/prisma/prisma.service';
+import * as path from 'path';
+import * as fs from 'fs';
+import { Response } from 'express';
 
 @Injectable()
 export class CertificateService {
@@ -12,7 +15,10 @@ export class CertificateService {
   async create(data: CreateCertificateDto): Promise<Certificate | ErrorEntity> {
     try {
       const req = await this.prismaService.certificate.create({
-        data,
+        data: {
+          ...data,
+          clientId: Number(data.clientId),
+        },
         include: {
           Client: true,
         },
@@ -104,7 +110,7 @@ export class CertificateService {
     }
   }
 
-  async uploadFile(file: any, data: CreateCertificateDto) {
+  async uploadFile(file: Express.Multer.File, data: CreateCertificateDto) {
     try {
       const clientId = data.clientId;
 
@@ -113,7 +119,7 @@ export class CertificateService {
         const create = await this.prismaService.certificate.create({
           data: {
             ...data,
-            url: file.path,
+            ...file,
           },
         });
 
@@ -122,29 +128,30 @@ export class CertificateService {
             id: create.id,
           },
           data: {
-            urlExt: `http://api.notanfe.com.br/certificate/download/${create.id}`,
+            url: `http://api.notanfe.com.br/certificate/download/${create.id}`,
           },
         });
 
         return plainToClass(Certificate, update);
       }
 
-      //fazer update en todos os objetos do array
-      await this.prismaService.certificate.updateMany({
-        where: {
-          id: {
-            in: Iscliente.map((i: any) => i.id),
+      if (Iscliente.length > 0) {
+        await this.prismaService.certificate.updateMany({
+          where: {
+            id: {
+              in: Iscliente.map((i: any) => i.id),
+            },
           },
-        },
-        data: {
-          status: false,
-        },
-      });
-
+          data: {
+            status: false,
+          },
+        });
+      }
+      //fazer update en todos os objetos do array
       const create = await this.prismaService.certificate.create({
         data: {
           ...data,
-          url: file.path,
+          ...file,
         },
       });
 
@@ -153,38 +160,45 @@ export class CertificateService {
           id: create.id,
         },
         data: {
-          urlExt: `http://api.notanfe.com.br/certificate/download/${create.id}`,
+          url: `http://api.notanfe.com.br/certificate/download/${create.id}`,
         },
       });
 
       return plainToClass(Certificate, update);
     } catch (error) {
+      console.log(error);
       const retorno: ErrorEntity = {
         message: error.message,
       };
       throw new HttpException(retorno, 400);
     }
-  } // TODO: implementar upload de arquivo
+  }
 
-  async download(id: string) {
+  async download(id: string, res: Response) {
     try {
-      //pesquisar o id
-      const req = await this.prismaService.certificate.findUnique({
-        where: {
-          id,
-        },
+      // Buscar o certificado no banco de dados pelo ID
+      const certificate = await this.prismaService.certificate.findUnique({
+        where: { id },
       });
-      //buscar o arquivo no diretório usando a propriedade url
-      const file = req.url;
-      // enviar o arquivo para o retorno
-      return file;
+
+      if (!certificate) {
+        throw new HttpException('Certificado não encontrado', 404);
+      }
+
+      // Caminho completo do arquivo
+      const filePath = path.resolve(`./${certificate.path}`);
+
+      // Verificar se o arquivo existe
+      if (!fs.existsSync(filePath)) {
+        throw new HttpException('Arquivo não encontrado', 404);
+      }
+
+      // Enviar o arquivo para o cliente com o nome original
+      return res.download(filePath, certificate.originalname);
     } catch (error) {
-      const retorno: ErrorEntity = {
-        message: error.message,
-      };
-      throw new HttpException(retorno, 400);
+      throw new HttpException(error.message, 400);
     }
-  } // TODO: implementar download de arquivo
+  }
 
   //--------------------------------------------
   async IsCliente(id: number) {
