@@ -29,6 +29,10 @@ export class ParceiroService {
 
       const req = await this.prismaService.parceiros.create({
         data,
+        include: {
+          Pagamento: true,
+          clientes: true,
+        },
       });
 
       return plainToClass(Parceiro, req);
@@ -59,6 +63,7 @@ export class ParceiroService {
               status: true,
             },
           },
+          Pagamento: true,
           createdAt: true,
           updatedAt: true,
         },
@@ -78,6 +83,7 @@ export class ParceiroService {
                 inativos: i.clientes.filter((i: any) => i.status == false)
                   .length,
               }),
+          Pagamento: i.Pagamento,
           createdAt: i.createdAt,
           updatedAt: i.updatedAt,
         };
@@ -138,6 +144,13 @@ export class ParceiroService {
               },
             },
           },
+          Pagamento: {
+            where: {
+              createdAt: {
+                gte: new Date(new Date().setMonth(new Date().getMonth() - 6)),
+              },
+            },
+          },
         },
       });
 
@@ -163,6 +176,7 @@ export class ParceiroService {
               cobrancas: true,
             },
           },
+          Pagamento: true,
         },
       });
 
