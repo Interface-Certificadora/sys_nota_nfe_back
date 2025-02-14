@@ -94,6 +94,7 @@ model Parceiros {
   nome      String
   cpf       String      @unique
   chave_pix String?
+  banco     String?
   telefone  String?
   whatsapp  Boolean     @default(false)
   email     String?

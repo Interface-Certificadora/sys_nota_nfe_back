@@ -36,6 +36,9 @@ export class PagamentoService {
             select: {
               id: true,
               nome: true,
+              banco: true,
+              chave_pix: true,
+              cpf: true,
             },
           },
         },
