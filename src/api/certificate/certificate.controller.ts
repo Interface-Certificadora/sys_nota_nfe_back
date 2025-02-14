@@ -8,6 +8,7 @@ import {
   Delete,
   UseInterceptors,
   UploadedFile,
+  Res,
 } from '@nestjs/common';
 import { CertificateService } from './certificate.service';
 import { CreateCertificateDto } from './dto/create-certificate.dto';
@@ -15,6 +16,10 @@ import { UpdateCertificateDto } from './dto/update-certificate.dto';
 import { diskStorage } from 'multer';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { editFileNamePfx, pfxFileFilter } from './utils/pfx-update.utils';
+import { Response } from 'express';
+import { ApiBody, ApiConsumes, ApiResponse } from '@nestjs/swagger';
+import { UpdateFileCertificateDto } from './dto/update-file-certificate.dto';
+import { ErrorEntity } from 'src/entities/error.entity';
 
 @Controller('certificate')
 export class CertificateController {
@@ -44,11 +49,56 @@ export class CertificateController {
   }
 
   @Delete(':id')
+  @ApiResponse({
+    status: 200,
+    description: 'Certificado removido com sucesso',
+    type: ErrorEntity,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Erro ao remover o certificado',
+    type: ErrorEntity,
+  })
   remove(@Param('id') id: string) {
     return this.certificateService.remove(id);
   }
 
   @Post('upload')
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+          description: 'Arquivo do certificado',
+        },
+        metadata: {
+          type: 'string',
+          description:
+            'Metadados do certificado em formato JSON ex: {"url": "https://example.com/certificate.pfx", "password": "123456", "validade": "2023-01-01", "status": true}',
+          example: JSON.stringify({
+            url: 'https://example.com/certificate.pfx',
+            password: '123456',
+            validade: '2023-01-01',
+            status: true,
+          }),
+        },
+      },
+      required: ['file', 'metadata'],
+    },
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Arquivo enviado com sucesso',
+    type: UpdateFileCertificateDto,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Erro ao salvar o arquivo',
+    type: ErrorEntity,
+  })
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({
@@ -58,13 +108,29 @@ export class CertificateController {
       fileFilter: pfxFileFilter,
     }),
   )
-  uploadPfx(@UploadedFile() file, @Body() data) {
-    const dados = JSON.parse(data.metadata);
-    return { message: 'Arquivo enviado com sucesso!', file, dados };
+  uploadPfx(
+    @UploadedFile() file: Express.Multer.File,
+    @Body()
+    data: {
+      metadata: string;
+    },
+  ) {
+    const dados: CreateCertificateDto = JSON.parse(data.metadata);
+    return this.certificateService.uploadFile(file, dados);
   }
 
   @Get('download/:id')
-  download(@Param('id') id: string) {
-    return this.certificateService.download(id);
+  // @ApiResponse({
+  //   status: 200,
+  //   description: 'Arquivo enviado com sucesso',
+  //   type: ErrorEntity,
+  // })
+  // @ApiResponse({
+  //   status: 400,
+  //   description: 'Erro ao salvar o arquivo',
+  //   type: ErrorEntity,
+  // })
+  download(@Param('id') id: string, @Res() res: Response) {
+    return this.certificateService.download(id, res);
   }
 }
