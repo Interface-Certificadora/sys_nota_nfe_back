@@ -386,4 +386,13 @@ export class CreateClienteDto {
   @IsOptional()
   @IsNumber({}, { message: 'O id do comissionado deve ser um número' })
   readonly parceiro_id: number; //id do comissionado
+
+  @ApiPropertyOptional({
+    description: 'Id do certificado',
+    example: 1,
+    type: Number,
+  })
+  @IsOptional()
+  @IsNumber({}, { message: 'O id do certificado deve ser um número' })
+  readonly certificate_id: number;
 }

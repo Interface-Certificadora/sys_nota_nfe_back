@@ -2,6 +2,7 @@ import { ApiResponseProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import { Cobranca } from '../../cobranca/entities/cobranca.entity';
 import { Parceiro } from '../../parceiro/entities/parceiro.entity';
+import { Certificate } from 'src/api/certificate/entities/certificate.entity';
 
 export class Cliente {
   @ApiResponseProperty({ type: Number })
@@ -192,6 +193,9 @@ export class Cliente {
 
   @ApiResponseProperty({ type: () => Parceiro })
   parceiro?: Parceiro;
+
+  @ApiResponseProperty({ type: () => Certificate })
+  certificate?: Certificate;
 
   constructor(partial: Partial<Cliente>) {
     Object.assign(this, partial);

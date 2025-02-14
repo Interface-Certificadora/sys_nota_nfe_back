@@ -19,6 +19,7 @@ export class ClienteService {
         include: {
           parceiro: true,
           cobrancas: true,
+          certificates: true,
         },
       });
 
@@ -64,6 +65,7 @@ export class ClienteService {
         include: {
           parceiro: true,
           cobrancas: true,
+          certificates: true,
         },
       });
       return plainToClass(Cliente, req);
@@ -97,6 +99,7 @@ export class ClienteService {
         include: {
           parceiro: true,
           cobrancas: true,
+          certificates: true,
         },
       });
       return plainToClass(Cliente, save);

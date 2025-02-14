@@ -8,67 +8,72 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   name      String
-  email     String   @unique
+  email     String    @unique
   password  String
   senha     String
-  status    Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  status    Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
 }
 
 model Client {
-  id              Int        @id @default(autoincrement()) //id do cliente
-  cliente         String //nome do cliente
-  fantasia        String? //nome fantasia
-  cnpj            String     @unique //cnpj
-  ie              String //inscrição estadual
-  razaoSocial     String //razao social
-  telefone        String? //telefone 1
-  whatsapp        Boolean    @default(false) //tem whatsapp tel 1
-  telefone2       String? //telefone 2
-  whatsapp2       Boolean    @default(false) //tem whatsapp tel 2
-  email           String? //email
-  user            String //usuário do portal Nota NFe
-  password        String //senha do portal Nota NFe
-  logo            String? //logo para adicionar no portal Nota NFe formato base64 ou url
-  ultimanota      String? //ultimo numero da nota antes do sistema
-  serie           String? //serie da ultima nota
-  vctoCd          DateTime? //data de vencimento do certificado digital
-  valor           Float //valor do plano
-  plano           String //tipo de plano
-  situacao        String? //situação do simples
-  simples         Boolean?   @default(true) //tem simples
-  status          Boolean?   @default(true) //status do cliente no sistema nota nfe
-  dominio         String //dominio do portal Nota NFe
-  contador        String //nome da contabilidade
-  tel_contador    String? //telefone da contabilidade
-  whatsapp_cont   Boolean    @default(false) //tem whatsapp da contabilidade
-  endereco        String? //endereço da empresa
-  bairro          String? //bairro da empresa
-  cidade          String? //cidade da empresa
-  uf              String? //uf da empresa
-  cep             String? //cep da empresa
-  complemento     String? //complemento do endereco da empresa
-  numero          String? //numero da empresa
-  fechamento      Int?       @default(10) //dia de fechamento do plano
-  teste           Int?       @default(10) //dia de teste do plano
-  vctoPlano       DateTime? //data de vencimento total do plano
-  sefaz           Boolean?   @default(false) //tem sefaz
-  justificativa   String? //justificativa
-  certificado     String? //endereço do certificado
-  key_certificado String? //senha do certificado
-  parceiro_id     Int? //id do comissionado
+  id              Int        @id @default(autoincrement())
+  cliente         String
+  fantasia        String?
+  cnpj            String     @unique
+  ie              String
+  razaoSocial     String
+  telefone        String?
+  whatsapp        Boolean    @default(false)
+  telefone2       String?
+  whatsapp2       Boolean    @default(false)
+  email           String?
+  user            String
+  password        String
+  logo            String?
+  ultimanota      String?
+  serie           String?
+  vctoCd          DateTime?
+  valor           Float
+  plano           String
+  situacao        String?
+  simples         Boolean?   @default(true)
+  status          Boolean?   @default(true)
+  dominio         String
+  contador        String
+  tel_contador    String?
+  whatsapp_cont   Boolean    @default(false)
+  endereco        String?
+  bairro          String?
+  cidade          String?
+  uf              String?
+  cep             String?
+  complemento     String?
+  numero          String?
+  fechamento      Int?       @default(10)
+  teste           Int?       @default(10)
+  vctoPlano       DateTime?
+  sefaz           Boolean?   @default(false)
+  justificativa   String?
+  certificado     String?
+  key_certificado String?
+  parceiro_id     Int?
   parceiro        Parceiros? @relation(fields: [parceiro_id], references: [id], onDelete: SetNull)
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
-  //cada cliente vai ter varias cobranças
-  cobrancas       Cobranca[]
+
+  // Um cliente pode ter vários certificados
+  certificates certificate[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Um cliente pode ter várias cobranças
+  cobrancas Cobranca[]
 }
 
 model Leads {
-  id          Int      @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   cliente     String
   fantasia    String?
   cnpj        String
@@ -76,12 +81,12 @@ model Leads {
   razaoSocial String
   contador    String?
   telefone    String?
-  whatsapp    Boolean  @default(false)
+  whatsapp    Boolean   @default(false)
   telefone2   String?
-  whatsapp2   Boolean  @default(false)
+  whatsapp2   Boolean   @default(false)
   email       String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime? @updatedAt
 }
 
 model Parceiros {
@@ -96,23 +101,23 @@ model Parceiros {
   clientes  Client[]
   status    Boolean     @default(true)
   createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
+  updatedAt DateTime?   @updatedAt
   Pagamento Pagamento[]
 }
 
 model Cobranca {
-  id          Int      @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   cliente_id  Int
   valor       Float
   venc        String
   current     String
-  status      Boolean  @default(false)
+  status      Boolean   @default(false)
   obs         String?
   link_boleto String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime? @updatedAt
   //cada cobrança vai ter um cliente
-  cliente     Client   @relation(fields: [cliente_id], references: [id], onDelete: Cascade)
+  cliente     Client    @relation(fields: [cliente_id], references: [id], onDelete: Cascade)
 }
 
 model Status_cliente {
@@ -123,14 +128,29 @@ model Status_cliente {
 }
 
 model Pagamento {
-  id          Int      @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   parceiro_id Int
   valor       Float
   venc        String
   current     String
-  status      Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  status      Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime? @updatedAt()
 
   parceiro Parceiros @relation(fields: [parceiro_id], references: [id], onDelete: Cascade)
+}
+
+model certificate {
+  id        String   @id @default(uuid())
+  url       String?
+  urlExt    String?
+  password  String?
+  validade  String?
+  status    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Um certificado pertence a um cliente
+  clientId Int
+  Client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }
