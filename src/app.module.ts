@@ -8,6 +8,7 @@ import { ClienteModule } from './api/cliente/cliente.module';
 import { ParceiroModule } from './api/parceiro/parceiro.module';
 import { CobrancaModule } from './api/cobranca/cobranca.module';
 import { PagamentoModule } from './api/pagamento/pagamento.module';
+import { CertificateModule } from './api/certificate/certificate.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { PagamentoModule } from './api/pagamento/pagamento.module';
     ParceiroModule,
     CobrancaModule,
     PagamentoModule,
+    CertificateModule,
   ],
   controllers: [AppController],
   providers: [AppService],
