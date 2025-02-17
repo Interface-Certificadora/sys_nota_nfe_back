@@ -90,7 +90,7 @@ export class ClienteController {
 
   @Delete(':id')
   @ApiResponse({
-    status: 200,
+    status: 201,
     description: 'Lista de clientes retornada com sucesso.',
     type: DeleteClienteDto,
   })
