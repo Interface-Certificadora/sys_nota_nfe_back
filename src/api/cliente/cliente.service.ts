@@ -25,8 +25,33 @@ export class ClienteService {
         throw new HttpException(retorno, 400);
       }
 
+      let isWhatsapp1 = false;
+      let isWhatsapp2 = false;
+      const numeros = [
+        dados.telefone ? `55${dados.telefone.replace(/\D/g, '')}` : null,
+        dados.telefone2 ? `55${dados.telefone2.replace(/\D/g, '')}` : null,
+      ].filter(Boolean);
+
+      const isWhatsappExists = await this.isWhatsapp(numeros);
+      console.log(
+        '🚀 ~ ClienteService ~ create ~ isWhatsappExists:',
+        isWhatsappExists,
+      );
+
+      if (isWhatsappExists.length > 0) {
+        console.log(isWhatsappExists[0].exists);
+        isWhatsapp1 = isWhatsappExists[0].exists;
+        if (dados.telefone2) {
+          isWhatsapp2 = isWhatsappExists[1].exists;
+        }
+      }
+
       const save = await this.prismaService.client.create({
-        data: dados,
+        data: {
+          ...dados,
+          whatsapp: isWhatsapp1,
+          ...(dados.telefone2 && { whatsapp2: isWhatsapp2 }),
+        },
         include: {
           parceiro: true,
           cobrancas: true,
@@ -144,6 +169,34 @@ export class ClienteService {
         message: error.message,
       };
       throw new HttpException(retorno, 400);
+    }
+  }
+
+  //--------------------------------------------------------------------------
+
+  async isWhatsapp(phones: string[]) {
+    try {
+      const req = await fetch(
+        `${process.env.WHATSAPP_URL}/chat/whatsappNumbers/${process.env.WHATSAPP_INSTACE}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            apikey: process.env.WHATSAPP_KEY,
+          },
+          body: JSON.stringify({
+            numbers: phones,
+          }),
+        },
+      );
+      const res = await req.json();
+      if (res.length > 0) {
+        return res;
+      }
+      return [];
+    } catch (error) {
+      console.log(error);
+      return [];
     }
   }
 }
