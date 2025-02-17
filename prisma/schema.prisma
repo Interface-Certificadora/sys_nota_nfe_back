@@ -40,7 +40,7 @@ model Client {
   plano           String
   situacao        String?
   simples         Boolean?      @default(true)
-  status          Boolean?      @default(true)
+  status          Boolean      @default(true)
   dominio         String
   contador        String
   tel_contador    String?
