@@ -36,6 +36,9 @@ export class ClienteService {
   async findAll(): Promise<Cliente[] | ErroClienteEntity> {
     try {
       const req = await this.prismaService.client.findMany({
+        where: {
+          status: true,
+        },
         select: {
           id: true,
           razaoSocial: true,
