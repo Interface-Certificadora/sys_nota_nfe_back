@@ -14,6 +14,17 @@ export class ClienteService {
 
   async create(dados: CreateClienteDto): Promise<Cliente | ErroClienteEntity> {
     try {
+      const isExist = await this.prismaService.client.findFirst({
+        where: { cnpj: { contains: dados.cnpj } },
+      });
+
+      if (isExist) {
+        const retorno: ErroClienteEntity = {
+          message: 'CNPJ ja cadastrado',
+        };
+        throw new HttpException(retorno, 400);
+      }
+
       const save = await this.prismaService.client.create({
         data: dados,
         include: {
