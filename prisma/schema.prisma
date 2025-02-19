@@ -68,6 +68,7 @@ model Client {
 
   // Um cliente pode ter várias cobranças
   cobrancas Cobranca[]
+  RelatSms RelatSms[]
 }
 
 model Leads {
@@ -120,13 +121,6 @@ model Cobranca {
   cliente     Client    @relation(fields: [cliente_id], references: [id], onDelete: Cascade)
 }
 
-model Status_cliente {
-  id         Int      @id @default(autoincrement())
-  status     String
-  id_cliente Int
-  createdAt  DateTime @default(now())
-}
-
 model Pagamento {
   id          Int       @id @default(autoincrement())
   parceiro_id Int
@@ -160,4 +154,16 @@ model certificate {
 
   // Um certificado pertence a um cliente
   Client Client @relation(fields: [clientId], references: [id])
+}
+
+model RelatSms {
+  id          Int       @id @default(autoincrement())
+  telefone    String?
+  cliente_id  Int
+  mensagem   String?
+  error_message Json?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime? @updatedAt()
+  //Um relato de SMS pertence a um cliente
+  Client Client @relation(fields: [cliente_id], references: [id], onDelete: Cascade)
 }
