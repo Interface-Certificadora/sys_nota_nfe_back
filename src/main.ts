@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as bodyParser from 'body-parser';
 
 async function bootstrap() {
   const port = process.env.PORT || 3000;
@@ -24,6 +25,10 @@ async function bootstrap() {
       transform: true, // Converte automaticamente os tipos
     }),
   );
+
+  // Aumenta o limite do payload para 50MB
+  app.use(bodyParser.json({ limit: '50mb' }));
+  app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
   await app.listen(port);
   console.log('.....');
