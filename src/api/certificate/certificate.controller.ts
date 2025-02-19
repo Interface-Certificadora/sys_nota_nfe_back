@@ -118,12 +118,10 @@ export class CertificateController {
         metadata: {
           type: 'string',
           description:
-            'Metadados do certificado em formato JSON ex: {"url": "https://example.com/certificate.pfx", "password": "123456", "validade": "2023-01-01", "status": true}',
+            'Metadados do certificado em formato JSON ex: {"password": "123456", "clientId": 1}',
           example: JSON.stringify({
-            url: 'https://example.com/certificate.pfx',
             password: '123456',
-            validade: '2023-01-01',
-            status: true,
+            clientId: '2023-01-01',
           }),
         },
       },
