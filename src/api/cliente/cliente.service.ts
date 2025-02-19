@@ -33,10 +33,6 @@ export class ClienteService {
       ].filter(Boolean);
 
       const isWhatsappExists = await this.isWhatsapp(numeros);
-      console.log(
-        '🚀 ~ ClienteService ~ create ~ isWhatsappExists:',
-        isWhatsappExists,
-      );
 
       if (isWhatsappExists.length > 0) {
         console.log(isWhatsappExists[0].exists);

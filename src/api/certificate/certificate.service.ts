@@ -8,6 +8,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import * as path from 'path';
 import * as fs from 'fs';
 import { Response } from 'express';
+import { execSync } from 'child_process';
 
 @Injectable()
 export class CertificateService {
@@ -113,12 +114,20 @@ export class CertificateService {
   async uploadFile(file: Express.Multer.File, data: CreateCertificateDto) {
     try {
       const clientId = data.clientId;
+      const filePath = path.resolve(__dirname, `../../../${file.path}`);
+
+      const Certificado = this.extractCertificateInfo(filePath, data.password);
+      console.log(
+        '🚀 ~ CertificateService ~ uploadFile ~ Certificado:',
+        Certificado,
+      );
 
       const Iscliente = await this.IsCliente(clientId);
       if (!Iscliente) {
         const create = await this.prismaService.certificate.create({
           data: {
             ...data,
+            validade: Certificado.expiracao,
             ...file,
           },
         });
@@ -151,6 +160,7 @@ export class CertificateService {
       const create = await this.prismaService.certificate.create({
         data: {
           ...data,
+          validade: Certificado.expiracao,
           ...file,
         },
       });
@@ -218,6 +228,36 @@ export class CertificateService {
     } catch (error) {
       console.log(error);
       return null;
+    }
+  }
+
+  extractCertificateInfo(filePath: string, password: string): any {
+    try {
+      //
+      const details = execSync(
+        `openssl pkcs12 -legacy -in ${filePath} -clcerts -nokeys -password pass:${password} | openssl x509 -dates -noout`,
+        {
+          encoding: 'utf-8',
+          shell: '/bin/bash',
+        },
+      );
+      const [notBefore, notAfter] = details.split('\n');
+      const notBeforeDate = new Date(notBefore.split('=')[1].trim())
+        .toISOString()
+        .split('T')[0];
+      const notAfterDate = new Date(notAfter.split('=')[1].trim())
+        .toISOString()
+        .split('T')[0];
+      return {
+        criacao: notBeforeDate,
+        expiracao: notAfterDate,
+      };
+    } catch (error) {
+      console.error('Erro ao processar o certificado:', error);
+      return {
+        error: 'Falha ao obter informações do certificado',
+        details: error,
+      };
     }
   }
 }

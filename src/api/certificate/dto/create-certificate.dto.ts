@@ -13,9 +13,10 @@ export class CreateCertificateDto {
     example: 'https://example.com/certificate.pfx',
     type: String,
   })
+  @IsOptional()
   @IsString({ message: 'A url tem que ser uma string' })
   @IsNotEmpty({ message: 'A url nao pode ser vazio' })
-  url: string;
+  url?: string;
 
   @ApiProperty({
     description: 'Senha do certificado',
@@ -31,6 +32,7 @@ export class CreateCertificateDto {
     example: '2023-01-01',
     type: String,
   })
+  @IsOptional()
   @IsString({ message: 'A validade tem que ser uma string' })
   @IsNotEmpty({ message: 'A validade nao pode ser vazio' })
   validade?: string;
