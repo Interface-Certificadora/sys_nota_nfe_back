@@ -11,8 +11,14 @@ export class VideosService {
         .readdirSync('/var/www/html/ar_interface/assets/notanfe')
         .filter((file) => file.endsWith('.mp4'));
 
-      const retorno = lista.map((i: any) => {
-        return `https://arinterface.com.br/assets/notanfe/${i}`;
+      const retorno = lista.map((i: any, index: number) => {
+        //pegar o i e retirar o .mp4 e depois substituir o _ por espaco
+        const tituloNome = i.replace('.mp4', '').replace('_', ' ');
+        return {
+          id: index + 1,
+          titulo: tituloNome,
+          url: `https://arinterface.com.br/assets/notanfe/${i}`,
+        };
       });
       return retorno.length > 0 ? retorno : [];
     } catch (error) {
