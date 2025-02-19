@@ -9,6 +9,7 @@ import { ParceiroModule } from './api/parceiro/parceiro.module';
 import { CobrancaModule } from './api/cobranca/cobranca.module';
 import { PagamentoModule } from './api/pagamento/pagamento.module';
 import { CertificateModule } from './api/certificate/certificate.module';
+import { VideosModule } from './api/videos/videos.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { CertificateModule } from './api/certificate/certificate.module';
     CobrancaModule,
     PagamentoModule,
     CertificateModule,
+    VideosModule,
   ],
   controllers: [AppController],
   providers: [AppService],

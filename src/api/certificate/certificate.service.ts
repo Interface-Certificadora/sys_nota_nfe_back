@@ -165,12 +165,14 @@ export class CertificateService {
         },
       });
 
+      const urlDownload = `${process.env.BASE_URL || 'http://api.notanfe.com.br'}/certificate/download/${create.id}`;
+
       const update = await this.prismaService.certificate.update({
         where: {
           id: create.id,
         },
         data: {
-          url: `http://api.notanfe.com.br/certificate/download/${create.id}`,
+          url: urlDownload,
         },
       });
 
