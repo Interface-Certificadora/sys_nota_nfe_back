@@ -13,7 +13,7 @@ export class VideosService {
 
       const retorno = lista.map((i: any, index: number) => {
         //pegar o i e retirar o .mp4 e depois substituir o _ por espaco
-        const tituloNome = i.replace('.mp4', '').replace('_', ' ');
+        const tituloNome = i.replace('.mp4', '').replace(/_/g, ' ');
         return {
           id: index + 1,
           titulo: tituloNome,
