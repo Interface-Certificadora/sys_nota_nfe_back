@@ -19,7 +19,7 @@ export const editFileNamePfx = (
   callback: Function,
 ) => {
   //pegar o nome original sem a extensão
-  const filetName = file.originalname.split('.')[0].split('_').join(' ');
+  const filetName = file.originalname.split('.')[0].replace(/ /g, '_');
   const fileExtName = extname(file.originalname);
   const randomName = Array(15)
     .fill(null)
