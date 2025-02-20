@@ -6,13 +6,17 @@ import * as bodyParser from 'body-parser';
 
 async function bootstrap() {
   const port = process.env.PORT || 3000;
+  const BaseUrl = process.env.BASE_URL;
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
 
   const config = new DocumentBuilder()
     .setTitle('Api Nota NFe')
-    .setDescription('documentação para rotas da api')
+    .setDescription(`documentação para rotas da api url de acesso ${BaseUrl}`)
     .setVersion('1.0')
+    .setBasePath('api')
+    .addServer(`http://localhost:${port}`, 'Servidor Local')
+    .addServer(BaseUrl, 'Servidor de Produção') // 👈 Base URL
     .addBearerAuth()
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
